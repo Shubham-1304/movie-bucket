@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="App.Starting.Theme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#3A3B3C</item>
+        <item name="windowSplashScreenAnimatedIcon" width="@dimen/dp_10"
+            height="@dimen/dp_10"
+            gravity="center">@drawable/presentation</item>
+        <item name="postSplashScreenTheme">@style/Theme.Test_app</item>
+    </style>
+</resources>
