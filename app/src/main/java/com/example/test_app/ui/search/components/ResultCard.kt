@@ -3,8 +3,6 @@ package com.example.test_app.ui.search.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,17 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.test_app.ui.movie_list.components.ExpandableContent
+import com.example.test_app.data.Movie
 
-data class ResultContent(
-    val id: Int,
-    val title: String,
-    val rating: Double,
-    val isAdded: Boolean
-)
 
 @Composable
-fun ResultCard(resultContent: ResultContent){
+fun ResultCard(
+    resultContent: Movie,
+){
     Card(backgroundColor = Color(0xFF3A3B3C),shape = RoundedCornerShape(8.dp)) {
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -45,7 +39,7 @@ fun ResultCard(resultContent: ResultContent){
                         fontSize = 16.sp
                     )
                 }
-                if (resultContent.isAdded) AddedTextButton() else RoundedCornerButton()
+                if (resultContent.isWatched==1) AddedTextButton() else RoundedCornerButton(resultContent)
             }
         }
     }

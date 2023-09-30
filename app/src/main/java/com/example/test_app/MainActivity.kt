@@ -31,8 +31,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.test_app.ui.splash.SplashScreen
 import com.example.test_app.utils.Navigation
+import dagger.hilt.android.AndroidEntryPoint
 
 @ExperimentalComposeUiApi
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

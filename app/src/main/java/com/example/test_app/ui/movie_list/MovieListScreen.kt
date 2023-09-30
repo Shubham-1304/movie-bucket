@@ -14,42 +14,44 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.test_app.ui.movie_list.components.Content
 import com.example.test_app.ui.movie_list.components.ExpandaleCard
 import com.example.test_app.utils.Screens
 
-val contentList= listOf(
-    Content(0,"Title One",9.0,true),
-    Content(1,"Title One",9.0,false),
-    Content(2,"Title One",9.0,false),
-    Content(3,"Title One",9.0,false),
-)
+
 @ExperimentalComposeUiApi
 @Composable
 fun MovieListScreen(
-    navController: NavController
-){
-//    var expandedItem by  remember{
-//        mutableStateOf(-1)
-//    }
+    navController: NavController,
+    viewModel: MovieListViewModel = hiltViewModel()
+
+) {
+    val allMovies = viewModel.getAllMovies.collectAsState(initial = emptyList())
+
     Scaffold(
         floatingActionButton = {
-        FloatingActionButton(
-            onClick = {
-                navController.navigate(Screens.SearchScreen.route)
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(Screens.SearchScreen.route)
+                }
+            ) {
+                Icon(Icons.Filled.Add, "")
             }
-        ) {
-            Icon(Icons.Filled.Add,"")
-        }
-    },
+        },
         backgroundColor = Color.Black,
-        content = {padding ->
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(padding).padding(vertical = 20.dp)){
-            items(contentList){content->
-                ExpandaleCard(
-                    content = content)
+        content = { padding ->
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(vertical = 20.dp)
+            ) {
+                items(allMovies.value) { content ->
+                    ExpandaleCard(
+                        content = content
+                    )
+                }
             }
-        }
-    })
+        })
 }

@@ -2,7 +2,6 @@ package com.example.test_app.ui.movie_list.components
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -17,23 +16,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.test_app.data.Movie
 
-data class Content(
-    val id: Int,
-    val title: String,
-    val rating: Double,
-    val hasWatched: Boolean
-)
 
 @ExperimentalComposeUiApi
 @Composable
 fun ExpandaleCard(
-    content: Content,
+    content: Movie,
 ){
 
     Card(backgroundColor = Color(0xFF3A3B3C),shape = RoundedCornerShape(8.dp)) {
+//        var hasWatched by remember {
+//            mutableStateOf(content.hasWatched)
+//        }
         var hasWatched by remember {
-            mutableStateOf(content.hasWatched)
+            mutableStateOf(content.isWatched)
         }
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -41,28 +38,28 @@ fun ExpandaleCard(
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = hasWatched, colors = CheckboxDefaults.colors(
+                Checkbox(checked = hasWatched==1, colors = CheckboxDefaults.colors(
                     checkedColor = Color.Yellow.copy(0.7f),
                     uncheckedColor = Color.White,
                     checkmarkColor = Color.White
                 ) ,onCheckedChange ={
-                    hasWatched=!hasWatched
+                    hasWatched=if(it==true) 1 else 0
                 } )
                 Spacer(modifier = Modifier.size(8.dp))
-                Text(text = "Title",
+                Text(text = content.title,
                     modifier = Modifier.weight(1f),
                     overflow = TextOverflow.Ellipsis,
                     color = Color.White,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.size(8.dp))
-                Text(text = "Rating",
+                Text(text = "${content.rating}",
                     color = Color.White,
                     fontSize = 16.sp
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
-            ExpandableContent(hasWatched, content.rating)
+            ExpandableContent(hasWatched==1, if (content.rating!=null)content.rating else 0.0)
         }
     }
 }
