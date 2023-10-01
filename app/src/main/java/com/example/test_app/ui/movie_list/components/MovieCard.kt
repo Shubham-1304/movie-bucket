@@ -16,13 +16,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.test_app.data.Movie
+import com.example.test_app.ui.movie_list.MovieListViewModel
 
 
 @ExperimentalComposeUiApi
 @Composable
 fun ExpandaleCard(
     content: Movie,
+    viewModel: MovieListViewModel = hiltViewModel()
 ){
 
     Card(backgroundColor = Color(0xFF3A3B3C),shape = RoundedCornerShape(8.dp)) {
@@ -44,6 +47,7 @@ fun ExpandaleCard(
                     checkmarkColor = Color.White
                 ) ,onCheckedChange ={
                     hasWatched=if(it==true) 1 else 0
+                    viewModel.updateMovieWatchStatus(content,hasWatched)
                 } )
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(text = content.title,
@@ -59,7 +63,7 @@ fun ExpandaleCard(
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
-            ExpandableContent(hasWatched==1, if (content.rating!=null)content.rating else 0.0)
+            ExpandableContent(hasWatched==1, if (content.rating!=null)content.userRating else 0,content)
         }
     }
 }
@@ -68,7 +72,8 @@ fun ExpandaleCard(
 @Composable
 fun ExpandableContent(
     isExpanded: Boolean,
-    rating: Double
+    userRating: Int,
+    content: Movie,
 ){
     val enterTransition= remember {
         expandVertically(
@@ -83,6 +88,7 @@ fun ExpandableContent(
     }
 
     AnimatedVisibility(visible = isExpanded, enter = enterTransition, exit = exitTransition) {
-        RatingBar(rating = 3)
+        println("RATING: ${userRating}")
+        RatingBar(content,rating = userRating)
     }
 }

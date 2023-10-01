@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.runtime.*
@@ -15,12 +16,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.test_app.data.Movie
+import com.example.test_app.ui.movie_list.MovieListViewModel
 
 @ExperimentalComposeUiApi
 @Composable
 fun RatingBar(
+    movie: Movie,
+    rating: Int,
     modifier: Modifier = Modifier,
-    rating: Int
+    viewModel: MovieListViewModel = hiltViewModel()
 ) {
     var ratingState by remember {
         mutableStateOf(rating)
@@ -41,15 +47,20 @@ fun RatingBar(
                 contentDescription = "star",
                 modifier = modifier
                     .width(30.dp)
-                    .height(30.dp)
+                    .height(30.dp).clickable {
+                        ratingState = i
+                    }
                     .pointerInteropFilter {
                         when (it.action) {
                             MotionEvent.ACTION_DOWN -> {
                                 selected = true
                                 ratingState = i
+                                viewModel.updateMovieRating(movie,ratingState)
+                                println("OKKK: ${ratingState}")
                             }
                             MotionEvent.ACTION_UP -> {
                                 selected = false
+                                println("OK132: ${ratingState}")
                             }
                         }
                         true
