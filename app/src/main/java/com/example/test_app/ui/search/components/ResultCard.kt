@@ -17,6 +17,8 @@ import com.example.test_app.data.Movie
 @Composable
 fun ResultCard(
     resultContent: Movie,
+    index: Int,
+    added: Boolean
 ){
     Card(backgroundColor = Color(0xFF3A3B3C),shape = RoundedCornerShape(8.dp)) {
         Column(modifier = Modifier
@@ -27,19 +29,20 @@ fun ResultCard(
                 .padding(8.dp)) {
                 Column(horizontalAlignment = Alignment.Start, modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Title",
+                        text = resultContent.title,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
                         fontSize = 18.sp
                     )
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text(
-                        text = "Rating",
-                        color = Color.White,
-                        fontSize = 16.sp
-                    )
+                    if(resultContent.rating!=null)
+                        Text(
+                            text = "${resultContent.rating}",
+                            color = Color.White,
+                            fontSize = 16.sp
+                        )
                 }
-                if (resultContent.isWatched==1) AddedTextButton() else RoundedCornerButton(resultContent)
+                if (added) AddedTextButton() else RoundedCornerButton(resultContent,index=index)
             }
         }
     }

@@ -15,10 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
@@ -27,27 +24,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.test_app.ui.theme.Test_appTheme
 import com.example.test_app.R
+import com.example.test_app.ui.search.AddMovieViewModel
 
 import kotlinx.coroutines.launch
 
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    text: String,
-    readOnly: Boolean,
     onClick: (() -> Unit)? = null,
     onValueChange: (String) -> Unit,
-    onSearch: () -> Unit
+    onSearch: () -> Unit,
+    hint: String = "Search",
+    viewModel: AddMovieViewModel = hiltViewModel()
 ) {
+
+    var text by remember {
+        mutableStateOf("")
+    }
 
     val interactionSource = remember {
         MutableInteractionSource()
     }
     val isClicked = interactionSource.collectIsPressedAsState().value
-    LaunchedEffect(key1 = isClicked){
-        if(isClicked){
+    LaunchedEffect(key1 = isClicked) {
+        if (isClicked) {
             onClick?.invoke()
         }
     }
@@ -58,8 +61,10 @@ fun SearchBar(
                 .fillMaxWidth()
                 .searchBar(),
             value = text,
-            onValueChange = onValueChange,
-            readOnly = readOnly,
+            onValueChange = {
+                text = it
+                viewModel.searchTitle = text
+            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.cold_drink),
@@ -78,8 +83,8 @@ fun SearchBar(
             shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.textFieldColors(
 //                containerColor = colorResource(id = R.color.input_background),
-                textColor = if (isSystemInDarkTheme()) Color.White else Color.Black,
-                cursorColor = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                textColor = Color.White,
+                cursorColor = Color.White,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
@@ -98,20 +103,9 @@ fun SearchBar(
 }
 
 fun Modifier.searchBar(): Modifier = composed {
-        border(
-            width = 1.dp,
-            color = Color.White,
-            shape = MaterialTheme.shapes.medium
-        )
-}
-
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun SearchBarPreview() {
-    Test_appTheme {
-        SearchBar(text = "", onValueChange = {}, readOnly = false) {
-
-        }
-    }
+    border(
+        width = 1.dp,
+        color = Color.White,
+        shape = MaterialTheme.shapes.medium
+    )
 }

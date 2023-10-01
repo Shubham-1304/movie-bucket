@@ -8,11 +8,15 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.test_app.data.MovieDatabase
 import com.example.test_app.data.MovieRepository
 import com.example.test_app.data.MovieRepositoryImpl
+import com.example.test_app.data.remote.MovieApi
+import com.example.test_app.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -21,7 +25,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTodoDatabase(app: Application): MovieDatabase {
+    fun provideMovieDatabase(app: Application): MovieDatabase {
         val MIGRATION_1_2: Migration = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL(
@@ -40,8 +44,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTodoRepository(db: MovieDatabase): MovieRepository {
-        return MovieRepositoryImpl(db.dao)
+    fun provideMovieRepository(db: MovieDatabase,api: MovieApi): MovieRepository {
+        return MovieRepositoryImpl(db.dao,api)
+    }
+    @Provides
+    @Singleton
+    fun provideMovieApi():MovieApi{
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .build()
+            .create(MovieApi::class.java)
     }
 
 }

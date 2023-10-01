@@ -13,10 +13,11 @@ import com.example.test_app.ui.search.AddMovieViewModel
 @Composable
 fun RoundedCornerButton(
     resultContent: Movie,
-    viewModel: AddMovieViewModel = hiltViewModel()
+    viewModel: AddMovieViewModel = hiltViewModel(),
+    index: Int
 ) {
     Button(onClick = {
-                     viewModel.onAddClick(AddMovieEvent.OnAddClicked(resultContent))
+                     viewModel.onAddClick(AddMovieEvent.OnAddClicked(resultContent),index)
     },
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Yellow.copy(0.8f))
